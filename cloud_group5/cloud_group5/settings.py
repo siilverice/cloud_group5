@@ -37,12 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'tiramisu',
-=======
     'rest_framework',
     'login',
->>>>>>> 07dbabe8ee22eff25b51664205eda567365b9118
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -126,11 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-<<<<<<< HEAD
 STATICFILES_DIRS = (
     PROJECT_PATH_JOIN('static'),
 )
-=======
 
 # REST framework configuration
 
@@ -144,4 +139,3 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
->>>>>>> 07dbabe8ee22eff25b51664205eda567365b9118
