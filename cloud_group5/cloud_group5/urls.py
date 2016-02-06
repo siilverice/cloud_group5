@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include,url
 from django.contrib import admin
+from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+<<<<<<< HEAD
     url(r'^index/', include('tiramisu.urls')),
+=======
+    url(r'^api-token-auth/', obtain_jwt_token),
+>>>>>>> 07dbabe8ee22eff25b51664205eda567365b9118
 ]
