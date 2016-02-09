@@ -9,10 +9,13 @@ from django.contrib.auth import authenticate
 def index(request):
 	if not request.session.is_empty() or request.user.is_anonymous():
 		user = User.objects.get(id=request.session['user_id'])
+		user_id = user.id
+		vm = VM.objects.filter(owner=user_id)
 		template = loader.get_template('index.html')
 		context = RequestContext(request, {
 			'name': user.username,
-			'id':user.id,
+			'id': user.id,
+			'vm_list': vm,
 		})
 		return HttpResponse(template.render(context))
 	else:
@@ -107,9 +110,6 @@ def create_vm(request):
 		vm.status 	= request.POST['status']
 		vm.save()
 		return HttpResponseRedirect("/tiramisu/index/")
-
-def listvm(request):
-	pass
 
 def register(request):
     return render(request,'register.html')
