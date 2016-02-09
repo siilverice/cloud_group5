@@ -4,15 +4,49 @@ from django.http import HttpResponse, HttpResponseRedirect
 from tiramisu.models import Requirements, VM, Cube
 import os
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 # Create your views here.
 def index(request):
-	return render(request,'index.html')
+	if not request.session.is_empty() or request.user.is_anonymous():
+		user = User.objects.get(id=request.session['user_id'])
+		template = loader.get_template('index.html')
+		context = RequestContext(request, {
+			'name': user.username,
+			'id':user.id,
+		})
+		return HttpResponse(template.render(context))
+	else:
+		return HttpResponseRedirect('tiramisu/login')
 
 def home(request):
 	return render(request,'home.html')
 
 def login(request):
 	return render(request,'login.html')
+
+def loginsuccess(request):
+	usr = request.POST['username']
+	passwd = request.POST['password']
+	user = authenticate(username=usr, password=passwd)
+	if user is not None:
+		# the password verified for the user
+		if user.is_active:
+			u = User.objects.get(username=usr)
+			request.session['user_id'] = u.id
+			print request.session['user_id']
+			return HttpResponseRedirect('/tiramisu/index')
+		else:
+			return HttpResponse("The password is valid, but the account has been disabled!")
+	else:
+		# the authentication system was unable to verify the username and password
+		return HttpResponse("The username and password were incorrect.<br><br><a href=\"/\"><button>LOGIN</button></a>")
+
+def logout(request):
+	if not request.session.is_empty():
+		request.session.delete()
+		return HttpResponseRedirect('/')
+	else:
+		return HttpResponseRedirect('login/')
 
 def manage(request):
 	template = loader.get_template('requirements.html')
