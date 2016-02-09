@@ -17,18 +17,20 @@
 <!-- Main content -->
 <section class="content">
 	<br>
-	<form>
+	<form action="/service/post/requirements/" method="POST">
+	{% csrf_token %}
+		<input type="hidden" name="name" value={{id}}>
 		<div class="box box-solid box-default">
 			<div class="box-header"><h4>Latency</h4></div>
 			<div class="box-body">
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Latency">
+					<input type="number" name="latency" class="form-control" placeholder="Latency">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Max Latency">
+					<input type="number" name="latency_max" class="form-control" placeholder="Max Latency">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Percentage error">
+					<input type="number" name="percentl" class="form-control" placeholder="Percentage error">
 				</div>
 			</div>
 		</div>
@@ -36,13 +38,13 @@
 			<div class="box-header"><h4>IOPS</h4></div>
 			<div class="box-body">
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Min IOPS">
+					<input type="number" name="iops_min" class="form-control" placeholder="Min IOPS">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="IOPS">
+					<input type="number" name="iops" class="form-control" placeholder="IOPS">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Percentage error">
+					<input type="number" name="percenti" class="form-control" placeholder="Percentage error">
 				</div>
 			</div>
 		</div>
@@ -50,13 +52,13 @@
 			<div class="box-header"><h4>Cost</h4></div>
 			<div class="box-body">
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Cost">
+					<input type="number" name="cost" class="form-control" placeholder="Cost">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Max Cost">
+					<input type="number" name="cost_max" class="form-control" placeholder="Max Cost">
 				</div>
 				<div class="col-md-4">
-					<input type="number" class="form-control" placeholder="Percentage error">
+					<input type="number" name="percentc" class="form-control" placeholder="Percentage error">
 				</div>
 			</div>
 		</div>
@@ -65,19 +67,19 @@
 			<div class="box-body">
 				<div class="radio">
 					<label>
-						<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+						<input type="radio" name="type" id="web" value="1" checked>
 						Website
 					</label>
 				</div>
 				<div class="radio">
 					<label>
-						<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+						<input type="radio" name="type" id="db" value="2">
 						Database (Write a lot of data)
 					</label>
 				</div>
 				<div class="radio disabled">
 					<label>
-						<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
+						<input type="radio" name="type" id="bj" value="3">
 						Batch job
 					</label>
 				</div>
@@ -85,8 +87,8 @@
 			</div>
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
-		<button type="submit" class="btn btn-danger">Reset</button>
 	</form>
+	
 </section>
 
 

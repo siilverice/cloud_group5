@@ -20,5 +20,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^$', include('tiramisu.urls')),
     url(r'^tiramisu/', include('tiramisu.urls')),
+    url(r'^service/', include('tiramisu.urls')),
 ]
