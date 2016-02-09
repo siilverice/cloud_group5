@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^post/requirements/$', views.change_requirements, name='change_requirements'),
     url(r'^register/$', views.register, name='register'),
     url(r'^registersuccess/$', views.registersuccess, name='registersuccess'),
+    url(r'^move/$', views.move, name='move'),
+    url(r'^turnoff/$', views.turnoff, name='turnoff'),
 ]

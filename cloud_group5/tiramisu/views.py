@@ -150,3 +150,14 @@ def showdetails(request):
 		'state': state,
 		'notice': notice })
    	return HttpResponse(template.render(context))
+
+def move(request):
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	command = 'ssh -t tuck@161.246.70.75 ./call_move ' + current_vm.name
+	os.system(command)
+	link = "../details?id=" + id_vm
+	return HttpResponseRedirect(link)
+
+def turnoff(request):
+	pass

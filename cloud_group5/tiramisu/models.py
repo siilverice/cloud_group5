@@ -29,6 +29,7 @@ class Storage(models.Model):
 	vm_name = models.CharField(max_length=100,primary_key=True)
 	current_pool = models.CharField(max_length=10)
 	appropiate_pool = models.CharField(max_length=10)
+	notice = models.IntegerField(default=0)
 
 class Cube(models.Model):
 	vm_name = models.CharField(max_length=100,primary_key=True)
