@@ -66,3 +66,6 @@ def create_vm(request):
 		vm.status 	= request.POST['status']
 		vm.save()
 		return HttpResponseRedirect("/tiramisu/index/")
+
+def listvm(request):
+	
