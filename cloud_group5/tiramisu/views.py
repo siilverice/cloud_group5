@@ -119,4 +119,58 @@ def registersuccess(request):
     passwd = request.POST['password']
     user = User.objects.create_user(usr, '', passwd)
     user.save()
-    return HttpResponseRedirect('/tiramisu/index/')
+    return HttpResponseRedirect('/tiramisu/login/')
+
+def createvm(request):
+	if not request.session.is_empty() or request.user.is_anonymous():
+		user = User.objects.get(id=request.session['user_id'])	
+		if request.method == 'GET':
+			template = loader.get_template('createvm.html')	
+			context = RequestContext(request)
+   			return HttpResponse(template.render(context))
+
+		if request.method == 'POST':
+			vm_name = user.id+request.POST['name']
+			vm = VM()
+			vm.owner 	= user.id
+			vm.name 	= vm_name
+			vm.ip 		= request.POST['ip']
+			vm.status 	= request.POST['status']
+			vm.save()
+			
+			req = Requirements()
+			req.vm_name		= vm_name
+			req.latency 	= request.POST['latency']
+			req.latency_max = request.POST['latency_max']
+			req.percentl 	= request.POST['percentl']
+			req.iops_min 	= request.POST['iops_min']
+			req.iops 		= request.POST['iops']
+			req.percenti 	= request.POST['percenti']
+			req.cost 		= request.POST['cost']
+			req.cost_max 	= request.POST['cost_max']
+			req.percentc 	= request.POST['percentc']
+			req.app_type 	= request.POST['type']
+			req.save()
+
+			cube = Cube()
+			cube.vm_name		= vm_name
+			cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
+			cube.latency 		= request.POST['latency']
+			cube.latency_max 	= request.POST['latency_max']
+			cube.percentl 		= request.POST['percentl']
+			cube.iops_min 		= request.POST['iops_min']
+			cube.iops 			= request.POST['iops']
+			cube.iops_max 		= float(request.POST['iops']) + cal_percent(float(request.POST['percenti']), float(request.POST['iops']))
+			cube.percenti 		= request.POST['percenti']
+			cube.cost_min 		= float(request.POST['cost']) - cal_percent(float(request.POST['percentc']), float(request.POST['cost']))
+			cube.cost 			= request.POST['cost']
+			cube.cost_max 		= request.POST['cost_max']
+			cube.percentc 		= request.POST['percentc']
+			cube.app_type 		= request.POST['type']
+			cube.save()
+
+			command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
+			os.system(command)
+			return HttpResponseRedirect("/tiramisu/index/")
+	else:
+		return HttpResponseRedirect('tiramisu/login')
