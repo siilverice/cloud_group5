@@ -3,9 +3,16 @@ from django.template import loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from tiramisu.models import Requirements, VM, Cube
 import os
+from django.contrib.auth.models import User
 # Create your views here.
 def index(request):
 	return render(request,'index.html')
+
+def home(request):
+	return render(request,'home.html')
+
+def login(request):
+	return render(request,'login.html')
 
 def manage(request):
 	template = loader.get_template('requirements.html')
@@ -68,4 +75,14 @@ def create_vm(request):
 		return HttpResponseRedirect("/tiramisu/index/")
 
 def listvm(request):
-	
+	pass
+
+def register(request):
+    return render(request,'register.html')
+
+def registersuccess(request):
+    usr = request.POST['username']
+    passwd = request.POST['password']
+    user = User.objects.create_user(usr, '', passwd)
+    user.save()
+    return HttpResponseRedirect('/tiramisu/index/')
