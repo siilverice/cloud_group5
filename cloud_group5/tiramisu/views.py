@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.template import loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from tiramisu.models import Requirements, VM, Cube
+from tiramisu.models import Requirements, VM, Cube, Storage, State
 import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -52,10 +52,16 @@ def logout(request):
 		return HttpResponseRedirect('login/')
 
 def manage(request):
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
 	template = loader.get_template('requirements.html')
-	id = request.GET['id']	
+	id_vm = request.GET['id']	
 	context = RequestContext(request, {
-		'id': id })
+		'id_vm': id_vm,
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm, })
    	return HttpResponse(template.render(context))
 
 def test(request):
@@ -120,3 +126,27 @@ def registersuccess(request):
     user = User.objects.create_user(usr, '', passwd)
     user.save()
     return HttpResponseRedirect('/tiramisu/index/')
+
+def showdetails(request):
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	template = loader.get_template('showdetails.html')
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	state = State.objects.get(vm_name=current_vm.name)
+	storage = Storage.objects.get(vm_name=current_vm.name)
+	if storage.current_pool == storage.appropiate_pool:
+		notice = 0
+	else:
+		notice = 1
+	context = RequestContext(request, {
+		'id_vm': id_vm,
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+		'storage': storage,
+		'current_vm': current_vm,
+		'state': state,
+		'notice': notice })
+   	return HttpResponse(template.render(context))

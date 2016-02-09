@@ -1,0 +1,48 @@
+{% extends "starter.html" %}
+
+{% block content %}
+
+
+<section class="content-header">
+	<h1>
+		VM id {{id_vm}}
+		<small>Optional description</small>
+	</h1>
+	
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<br>
+	{% if notice %}
+		<div class="callout callout-danger lead">
+	    <h4>Please notice!</h4>
+	    	<h5>
+	      		Now, your VM appropiate with another storage.<br>
+	      		We recommend you to move your VM for better performance or cost cheaper.
+	    	</h5>
+	    	<div class="col-md-10"></div>
+			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Move</button></a>
+			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-denger">Turn off notice</button></a>
+	  	</div>
+	{% endif %}
+	<p>VM name: {{storage.vm_name}}</p>
+	<p>Current storage: {{storage.current_pool}}</p>
+	<p>Appropiate storage: {{storage.appropiate_pool}}</p>
+	<p>IP: {{current_vm.ip}}</p>
+	{% if current_vm.status %}
+		<p>Status: Up <i class="fa fa-circle text-success"></i></p>
+	{% else %}
+		<p>Status: Down <i class="fa fa-circle text-failure"></i></p>
+	{% endif %}
+	<p>Virtual disk's size: {{current_vm.size}}</p>
+	<p>Cost: {{current_vm.cost}} THB</p>
+	<p>Latency: {{state.latency}} ms</p>
+	<p>IOPS: {{state.iops}}</p>
+	
+   	<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+	
+</section>
+
+
+{% endblock %}
