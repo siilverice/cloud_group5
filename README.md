@@ -14,7 +14,7 @@ sudo pip install virtualenv
 
 Activate environment
 ```
-virtualenv env_cloud/bin/activate
+source env_cloud/bin/activate
 ```
 
 Deactivate environment
