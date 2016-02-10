@@ -136,6 +136,10 @@ def showdetails(request):
 	current_vm = VM.objects.get(id=id_vm)
 	state = State.objects.get(vm_name=current_vm.name)
 	storage = Storage.objects.get(vm_name=current_vm.name)
+	if storage.current_pool == 'HDD':
+		hdd = 1
+	else:
+		hdd = 0
 	if storage.current_pool != storage.appropiate_pool and storage.notice:
 		notice = 1
 	else:
@@ -153,7 +157,8 @@ def showdetails(request):
 		'current_vm': current_vm,
 		'state': state,
 		'notice': notice,
-		'turnoff': turnoff, })
+		'turnoff': turnoff,
+		'hdd': hdd, })
    	return HttpResponse(template.render(context))
 
 def move(request):

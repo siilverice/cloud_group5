@@ -5,8 +5,8 @@
 
 <section class="content-header">
 	<h1>
-		VM id {{id_vm}}
-		<small>Optional description</small>
+		{{ storage.vm_name }}
+		<small>VM id: {{ id_vm }}</small>
 	</h1>
 	
 </section>
@@ -40,6 +40,14 @@
 	<p>Cost: {{current_vm.cost}} THB</p>
 	<p>Latency: {{state.latency}} ms</p>
 	<p>IOPS: {{state.iops}}</p>
+	<p>Performance of current storage:</p>
+	{% if hdd %}
+		<p>Latency: {{ state.latency_hdd }} ms</p>
+		<p>IOPS: {{ state.iops_hdd }}</p>
+	{% else %}
+		<p>Latency: {{ state.latency_ssd }} ms</p>
+		<p>IOPS: {{ state.iops_ssd }}</p>
+	{% endif %}
 	<div class="row">
 		<div class="col-md-10">
 		{% if turnoff %}
