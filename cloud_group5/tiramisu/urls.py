@@ -10,10 +10,11 @@ urlpatterns = [
     url(r'^index/$', views.index, name='index'),
     url(r'^manage/$', views.manage, name='manage'),
     url(r'^details/$', views.showdetails, name='showdetails'),
-    url(r'^post/requirements/$', views.change_requirements, name='change_requirements'),
+    url(r'^requirements/$', views.change_requirements, name='change_requirements'),
     url(r'^register/$', views.register, name='register'),
     url(r'^registersuccess/$', views.registersuccess, name='registersuccess'),
     url(r'^move/$', views.move, name='move'),
     url(r'^turnoff/$', views.turnoff, name='turnoff'),
     url(r'^turnon/$', views.turnon, name='turnon'),
+    url(r'^cancel/$', views.cancel, name='cancel'),
 ]

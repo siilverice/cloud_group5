@@ -56,12 +56,32 @@ def manage(request):
 	user_id = user.id
 	vm = VM.objects.filter(owner=user_id)
 	template = loader.get_template('requirements.html')
-	id_vm = request.GET['id']	
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	req = Requirements.objects.get(vm_name=current_vm.name)
+	if req.app_type == 1:
+		web = 1
+		db = 0
+		bj = 0
+	elif req.app_type == 2:
+		web = 0
+		db = 1
+		bj = 0
+	else:
+		web = 0
+		db = 0
+		bj = 1
 	context = RequestContext(request, {
 		'id_vm': id_vm,
 		'name': user.username,
 		'id': user.id,
-		'vm_list': vm, })
+		'vm_list': vm,
+		'req': req,
+		'web': web,
+		'db': db,
+		'bj': bj,
+		'current_name': current_vm.name,
+		'apply': 0 })
    	return HttpResponse(template.render(context))
 
 def test(request):
@@ -75,6 +95,7 @@ def change_requirements(request):
 		id_vm 	= request.POST['name']
 		name = VM.objects.get(pk=id_vm)
 		req = Requirements.objects.get(pk=name.name)
+		req_old = Requirements.objects.get(pk=name.name)
 		req.latency 	= request.POST['latency']
 		req.latency_max = request.POST['latency_max']
 		req.percentl 	= request.POST['percentl']
@@ -88,6 +109,7 @@ def change_requirements(request):
 		req.save()
 
 		cube = Cube.objects.get(pk=name.name)
+		cube_old = cube
 		cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
 		cube.latency 		= request.POST['latency']
 		cube.latency_max 	= request.POST['latency_max']
@@ -105,7 +127,57 @@ def change_requirements(request):
 
 		command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
 		os.system(command)
-		return HttpResponseRedirect("/tiramisu/index/")
+
+		user = User.objects.get(id=request.session['user_id'])
+		user_id = user.id
+		vm = VM.objects.filter(owner=user_id)
+		template = loader.get_template('apply.html')
+		id_vm = request.POST['name']
+		current_vm = VM.objects.get(id=id_vm)
+		state = State.objects.get(vm_name=current_vm.name)
+		storage = Storage.objects.get(vm_name=current_vm.name)
+		if storage.appropiate_pool == 'HDD':
+			appropiate_latency = state.latency_hdd
+			appropiate_iops = state.iops_hdd
+			cost = float(current_vm.size) * 0.050
+		else:
+			appropiate_latency = state.latency_ssd
+			appropiate_iops = state.iops_ssd
+			cost = float(current_vm.size) * 0.090
+		if req.app_type == 1:
+			web = 1
+			db = 0
+			bj = 0
+		elif req.app_type == 2:
+			web = 0
+			db = 1
+			bj = 0
+		else:
+			web = 0
+			db = 0
+			bj = 1
+		if storage.current_pool == storage.appropiate_pool:
+			change = 0
+		else:
+			change = 1
+		context = RequestContext(request, {
+			'id_vm': id_vm,
+			'name': user.username,
+			'id': user.id,
+			'vm_list': vm,
+			'req': req,
+			'web': web,
+			'db': db,
+			'bj': bj,
+			'current_name': current_vm.name,
+			'apply': 1,
+			'req_old': req_old,
+			'appropiate_pool': storage.appropiate_pool,
+			'appropiate_iops': appropiate_iops,
+			'appropiate_latency': appropiate_latency,
+			'cost': cost,
+			'change': change, })
+	   	return HttpResponse(template.render(context))
 
 def create_vm(request):
 	if request.method == 'POST':
@@ -186,3 +258,42 @@ def turnon(request):
 	storage.save()
 	link = "../details?id=" + id_vm
 	return HttpResponseRedirect(link)
+
+def cancel(request):
+	if request.method == 'POST':
+		id_vm 	= request.POST['name']
+		name = VM.objects.get(pk=id_vm)
+		req = Requirements.objects.get(pk=name.name)
+		req.latency 	= request.POST['latency']
+		req.latency_max = request.POST['latency_max']
+		req.percentl 	= request.POST['percentl']
+		req.iops_min 	= request.POST['iops_min']
+		req.iops 		= request.POST['iops']
+		req.percenti 	= request.POST['percenti']
+		req.cost 		= request.POST['cost']
+		req.cost_max 	= request.POST['cost_max']
+		req.percentc 	= request.POST['percentc']
+		req.app_type 	= request.POST['type']
+		req.save()
+
+		cube = Cube.objects.get(pk=name.name)
+		cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
+		cube.latency 		= request.POST['latency']
+		cube.latency_max 	= request.POST['latency_max']
+		cube.percentl 		= request.POST['percentl']
+		cube.iops_min 		= request.POST['iops_min']
+		cube.iops 			= request.POST['iops']
+		cube.iops_max 		= float(request.POST['iops']) + cal_percent(float(request.POST['percenti']), float(request.POST['iops']))
+		cube.percenti 		= request.POST['percenti']
+		cube.cost_min 		= float(request.POST['cost']) - cal_percent(float(request.POST['percentc']), float(request.POST['cost']))
+		cube.cost 			= request.POST['cost']
+		cube.cost_max 		= request.POST['cost_max']
+		cube.percentc 		= request.POST['percentc']
+		cube.app_type 		= request.POST['type']
+		cube.save()
+
+		command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
+		os.system(command)
+
+		link = "../manage?id=" + id_vm
+		return HttpResponseRedirect(link)
