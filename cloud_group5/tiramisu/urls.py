@@ -17,4 +17,7 @@ urlpatterns = [
     url(r'^turnoff/$', views.turnoff, name='turnoff'),
     url(r'^turnon/$', views.turnon, name='turnon'),
     url(r'^cancel/$', views.cancel, name='cancel'),
+    url(r'^createvm/$', views.createvm, name='createvm'),
+    url(r'^checkavl/$', views.vmname_availability, name='vmname_availability'),
+    url(r'^createvmsuccess/$', views.createvmsuccess, name='createvmsuccess'),
 ]

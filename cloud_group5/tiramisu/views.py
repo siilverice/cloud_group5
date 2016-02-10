@@ -5,6 +5,8 @@ from tiramisu.models import Requirements, VM, Cube, Storage, State
 import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 def index(request):
 	if not request.session.is_empty() or request.user.is_anonymous():
@@ -179,16 +181,6 @@ def change_requirements(request):
 			'change': change, })
 	   	return HttpResponse(template.render(context))
 
-def create_vm(request):
-	if request.method == 'POST':
-		vm = VM()
-		vm.owner 	= request.POST['owner']
-		vm.name 	= request.POST['name']
-		vm.ip 		= request.POST['ip']
-		vm.status 	= request.POST['status']
-		vm.save()
-		return HttpResponseRedirect("/tiramisu/index/")
-
 def register(request):
     return render(request,'register.html')
 
@@ -197,7 +189,7 @@ def registersuccess(request):
     passwd = request.POST['password']
     user = User.objects.create_user(usr, '', passwd)
     user.save()
-    return HttpResponseRedirect('/tiramisu/index/')
+	return HttpResponseRedirect('/tiramisu/login/')
 
 def showdetails(request):
 	user = User.objects.get(id=request.session['user_id'])
@@ -297,3 +289,93 @@ def cancel(request):
 
 		link = "../manage?id=" + id_vm
 		return HttpResponseRedirect(link)
+
+@csrf_exempt
+def vmname_availability(request):
+	if not request.session.is_empty() or request.user.is_anonymous():
+		user = User.objects.get(id=request.session['user_id'])	
+		if request.method == 'POST':
+			vm_name = str(user.id)+request.POST.get('vm_name')
+			#vmObject = VM.objects.get(name=vm_name)
+			#vmObject = get_object_or_404(VM, name=vm_name)
+			try:
+				vmObject = VM.objects.get(name=vm_name)
+			except VM.DoesNotExist:
+				vmObject = None
+			if vmObject == None:
+				response_data = {'result' : 'pos'}
+			else:
+				response_data = {'result' : 'neg'}
+			return JsonResponse(response_data)
+
+def createvm(request):
+	if not request.session.is_empty() or request.user.is_anonymous():
+		user = User.objects.get(id=request.session['user_id'])	
+		if request.method == 'GET':
+			template = loader.get_template('createvm.html')	
+			user = User.objects.get(id=request.session['user_id'])
+			user_id = user.id
+			vm = VM.objects.filter(owner=user_id)
+			context = RequestContext(request, {
+				'name': user.username,
+				'id': user.id,
+				'vm_list': vm,
+			})
+   			return HttpResponse(template.render(context))
+
+		if request.method == 'POST':
+			vm_name = str(user.id)+request.POST['name']
+			req = Requirements()
+			req.vm_name		= vm_name
+			req.latency 	= request.POST['latency']
+			req.latency_max = request.POST['latency_max']
+			req.percentl 	= request.POST['percentl']
+			req.iops_min 	= request.POST['iops_min']
+			req.iops 		= request.POST['iops']
+			req.percenti 	= request.POST['percenti']
+			req.cost 		= request.POST['cost']
+			req.cost_max 	= request.POST['cost_max']
+			req.percentc 	= request.POST['percentc']
+			req.app_type 	= request.POST['type']
+			req.save()
+
+			cube = Cube()
+			cube.vm_name		= vm_name
+			cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
+			cube.latency 		= request.POST['latency']
+			cube.latency_max 	= request.POST['latency_max']
+			cube.percentl 		= request.POST['percentl']
+			cube.iops_min 		= request.POST['iops_min']
+			cube.iops 			= request.POST['iops']
+			cube.iops_max 		= float(request.POST['iops']) + cal_percent(float(request.POST['percenti']), float(request.POST['iops']))
+			cube.percenti 		= request.POST['percenti']
+			cube.cost_min 		= float(request.POST['cost']) - cal_percent(float(request.POST['percentc']), float(request.POST['cost']))
+			cube.cost 			= request.POST['cost']
+			cube.cost_max 		= request.POST['cost_max']
+			cube.percentc 		= request.POST['percentc']
+			cube.app_type 		= request.POST['type']
+			cube.save()
+
+			command = 'ssh -t tuck@161.246.70.75 ./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
+			os.system(command)
+
+			vm = VM.objects.get(name=vm_name)
+			link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
+			return HttpResponseRedirect(link)
+	else:
+		return HttpResponseRedirect('tiramisu/login')
+
+def createvmsuccess(request):
+	id_vm = request.GET['id']
+	your_vm = VM.objects.get(id=id_vm)
+	template = loader.get_template('createvmsuccess.html')
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	context = RequestContext(request, {
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+		'ip': your_vm.ip,
+	})
+   	return HttpResponse(template.render(context))

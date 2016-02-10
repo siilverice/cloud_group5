@@ -11,6 +11,7 @@ class VM(models.Model):
 	status = models.IntegerField()
 	size = models.FloatField(default=8589.93)
 	cost = models.FloatField(default=429.49)
+	name_display = models.CharField(max_length=100,default='name')
 
 class Requirements(models.Model):
 	vm_name = models.CharField(max_length=100,primary_key=True)

@@ -1,0 +1,129 @@
+{% extends "starter.html" %}
+
+{% block content %}
+
+
+<section class="content-header">
+	<h1>
+		Create VM
+		<small>Optional description</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+		<li class="active">Here</li>
+	</ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<br>
+	<form action="/tiramisu/createvm/" method="POST">
+	{% csrf_token %}
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>VM name</h4></div>
+			<div class="box-body">
+				<div class="col-md-8">
+					<input type="text" name="name" id="vm_name" class="form-control" placeholder="VM name">
+				</div>
+				<div class="col-md-4">
+					<button type="button" class="btn btn-default" id="btn_check">check</button>
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Latency</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="latency" class="form-control" placeholder="Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="latency_max" class="form-control" placeholder="Max Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentl" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>IOPS</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="iops_min" class="form-control" placeholder="Min IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="iops" class="form-control" placeholder="IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percenti" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Cost</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="cost" class="form-control" placeholder="Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="cost_max" class="form-control" placeholder="Max Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentc" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+		<div class="box-header"><h4>Application type</h4></div>
+			<div class="box-body">
+				<div class="radio">
+					<label>
+						<input type="radio" name="type" id="web" value="1" checked>
+						Website
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="type" id="db" value="2">
+						Database (Write a lot of data)
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="type" id="bj" value="3">
+						Batch job
+					</label>
+				</div>
+
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	
+</section>
+<script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+  //your code here
+	$("#btn_check").click(function(){
+		vm_name = $("#vm_name").val();
+		console.log(vm_name);
+		if (vm_name.length != 0){
+			$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
+    			$("#btn_check").removeClass("btn-default btn-danger btn-success");
+    			if (data.result == "pos"){ 
+    				$("#btn_check").addClass("btn-success");
+    			}
+    			else { 
+					$("#btn_check").addClass("btn-danger");
+    			}
+  			});
+		}
+		else{
+			alert("length == 0"); 
+		}
+	});
+	});
+
+</script>
+
+{% endblock %}
