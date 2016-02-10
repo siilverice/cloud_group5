@@ -17,20 +17,19 @@
 <!-- Main content -->
 <section class="content">
 	<br>
-	<form action="/service/post/requirements/" method="POST">
+	<form action="/tiramisu/createvm/" method="POST">
 	{% csrf_token %}
 		<div class="box box-solid box-default">
-			<div class="box-header"><h4>Name</h4></div>
+			<div class="box-header"><h4>VM name</h4></div>
 			<div class="box-body">
 				<div class="col-md-8">
-					<input type="text" name="name" id="vm_name" class="form-control" placeholder="Name">
+					<input type="text" name="name" id="vm_name" class="form-control" placeholder="VM name">
 				</div>
 				<div class="col-md-4">
 					<button type="button" class="btn btn-default" id="btn_check">check</button>
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="name" value={{id}}>
 		<div class="box box-solid box-default">
 			<div class="box-header"><h4>Latency</h4></div>
 			<div class="box-body">
@@ -88,7 +87,7 @@
 						Database (Write a lot of data)
 					</label>
 				</div>
-				<div class="radio disabled">
+				<div class="radio">
 					<label>
 						<input type="radio" name="type" id="bj" value="3">
 						Batch job

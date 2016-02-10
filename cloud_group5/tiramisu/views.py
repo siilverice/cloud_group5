@@ -103,16 +103,6 @@ def change_requirements(request):
 		os.system(command)
 		return HttpResponseRedirect("/tiramisu/index/")
 
-def create_vm(request):
-	if request.method == 'POST':
-		vm = VM()
-		vm.owner 	= request.POST['owner']
-		vm.name 	= request.POST['name']
-		vm.ip 		= request.POST['ip']
-		vm.status 	= request.POST['status']
-		vm.save()
-		return HttpResponseRedirect("/tiramisu/index/")
-
 def register(request):
     return render(request,'register.html')
 
@@ -146,18 +136,18 @@ def createvm(request):
 		user = User.objects.get(id=request.session['user_id'])	
 		if request.method == 'GET':
 			template = loader.get_template('createvm.html')	
-			context = RequestContext(request)
+			user = User.objects.get(id=request.session['user_id'])
+			user_id = user.id
+			vm = VM.objects.filter(owner=user_id)
+			context = RequestContext(request, {
+				'name': user.username,
+				'id': user.id,
+				'vm_list': vm,
+			})
    			return HttpResponse(template.render(context))
 
 		if request.method == 'POST':
 			vm_name = str(user.id)+request.POST['name']
-			vm = VM()
-			vm.owner 	= user.id
-			vm.name 	= vm_name
-			vm.ip 		= request.POST['ip']
-			vm.status 	= request.POST['status']
-			vm.save()
-			
 			req = Requirements()
 			req.vm_name		= vm_name
 			req.latency 	= request.POST['latency']
@@ -189,8 +179,26 @@ def createvm(request):
 			cube.app_type 		= request.POST['type']
 			cube.save()
 
-			command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
+			command = 'ssh -t tuck@161.246.70.75 ./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
 			os.system(command)
-			return HttpResponseRedirect("/tiramisu/index/")
+
+			vm = VM.objects.get(name=vm_name)
+			link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
+			return HttpResponseRedirect(link)
 	else:
 		return HttpResponseRedirect('tiramisu/login')
+
+def createvmsuccess(request):
+	id_vm = request.GET['id']
+	your_vm = VM.objects.get(id=id_vm)
+	template = loader.get_template('createvmsuccess.html')
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	context = RequestContext(request, {
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+		'ip': your_vm.ip,
+	})
+   	return HttpResponse(template.render(context))
