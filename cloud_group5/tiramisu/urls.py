@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^registersuccess/$', views.registersuccess, name='registersuccess'),
     url(r'^move/$', views.move, name='move'),
     url(r'^turnoff/$', views.turnoff, name='turnoff'),
+    url(r'^turnon/$', views.turnon, name='turnon'),
 ]

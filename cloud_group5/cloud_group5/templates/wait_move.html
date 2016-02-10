@@ -23,13 +23,13 @@
 	      		We recommend you to move your VM for better performance or cost cheaper.
 	    	</h5>
 
-	    	<div class="overlay">
-  				<i class="fa fa-refresh fa-spin"></i>	
+	    	<div class="overlay text-center">
+  				<h1><i class="fa fa-refresh fa-spin"></i></h1>
   				<h6>Moving...please wait</h6>
 	  		</div>
 	    	<div class="col-md-10"></div>
-			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Move</button></a>
-			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-denger">Turn off notice</button></a>
+			<a href="../move/?id={{id_vm}}"><button disabled type="button" class="btn btn-primary">Move</button></a>
+			<a href="../turnoff/?id={{id_vm}}"><button disabled type="button" class="btn btn-denger">Turn off notice</button></a>
 	  	</div>
 	{% endif %}
 	<p>VM name: {{storage.vm_name}}</p>
@@ -46,7 +46,7 @@
 	<p>Latency: {{state.latency}} ms</p>
 	<p>IOPS: {{state.iops}}</p>
 	
-   	<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+   	<a href="../manage/?id={{id_vm}}"><button disabled type="button" class="btn btn-primary">Manage</button></a>
 	
 </section>
 

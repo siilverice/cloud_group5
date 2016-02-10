@@ -136,10 +136,14 @@ def showdetails(request):
 	current_vm = VM.objects.get(id=id_vm)
 	state = State.objects.get(vm_name=current_vm.name)
 	storage = Storage.objects.get(vm_name=current_vm.name)
-	if storage.current_pool == storage.appropiate_pool:
-		notice = 0
-	else:
+	if storage.current_pool != storage.appropiate_pool and storage.notice:
 		notice = 1
+	else:
+		notice = 0
+	if not storage.notice:
+		turnoff = 1
+	else:
+		turnoff = 0
 	context = RequestContext(request, {
 		'id_vm': id_vm,
 		'name': user.username,
@@ -148,7 +152,8 @@ def showdetails(request):
 		'storage': storage,
 		'current_vm': current_vm,
 		'state': state,
-		'notice': notice })
+		'notice': notice,
+		'turnoff': turnoff, })
    	return HttpResponse(template.render(context))
 
 def move(request):
@@ -160,4 +165,19 @@ def move(request):
 	return HttpResponseRedirect(link)
 
 def turnoff(request):
-	pass
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	storage = Storage.objects.get(vm_name=current_vm.name)
+	storage.notice = 0
+	storage.save()
+	link = "../details?id=" + id_vm
+	return HttpResponseRedirect(link)
+
+def turnon(request):
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	storage = Storage.objects.get(vm_name=current_vm.name)
+	storage.notice = 1
+	storage.save()
+	link = "../details?id=" + id_vm
+	return HttpResponseRedirect(link)

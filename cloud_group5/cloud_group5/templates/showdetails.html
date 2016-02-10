@@ -40,8 +40,16 @@
 	<p>Cost: {{current_vm.cost}} THB</p>
 	<p>Latency: {{state.latency}} ms</p>
 	<p>IOPS: {{state.iops}}</p>
-	
-   	<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+	<div class="row">
+		<div class="col-md-10">
+		{% if turnoff %}
+			<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning">Turn on notification</button></a>
+		{% endif %}
+		</div>
+		<div class="col-md-2">
+   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+   		</div>
+   	</div>
 	
 </section>
 
