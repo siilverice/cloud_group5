@@ -5,6 +5,8 @@ from tiramisu.models import Requirements, VM, Cube
 import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 def index(request):
 	if not request.session.is_empty() or request.user.is_anonymous():
@@ -121,6 +123,24 @@ def registersuccess(request):
     user.save()
     return HttpResponseRedirect('/tiramisu/login/')
 
+@csrf_exempt
+def vmname_availability(request):
+	if not request.session.is_empty() or request.user.is_anonymous():
+		user = User.objects.get(id=request.session['user_id'])	
+		if request.method == 'POST':
+			vm_name = str(user.id)+request.POST.get('vm_name')
+			#vmObject = VM.objects.get(name=vm_name)
+			#vmObject = get_object_or_404(VM, name=vm_name)
+			try:
+				vmObject = VM.objects.get(name=vm_name)
+			except VM.DoesNotExist:
+				vmObject = None
+			if vmObject == None:
+				response_data = {'result' : 'pos'}
+			else:
+				response_data = {'result' : 'neg'}
+			return JsonResponse(response_data)
+
 def createvm(request):
 	if not request.session.is_empty() or request.user.is_anonymous():
 		user = User.objects.get(id=request.session['user_id'])	
@@ -130,7 +150,7 @@ def createvm(request):
    			return HttpResponse(template.render(context))
 
 		if request.method == 'POST':
-			vm_name = user.id+request.POST['name']
+			vm_name = str(user.id)+request.POST['name']
 			vm = VM()
 			vm.owner 	= user.id
 			vm.name 	= vm_name

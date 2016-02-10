@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     url(r'^registersuccess/$', views.registersuccess, name='registersuccess'),
     url(r'^createvm/$', views.createvm, name='createvm'),
+    url(r'^checkavl/$', views.vmname_availability, name='vmname_availability'),
 ]
