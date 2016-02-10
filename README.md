@@ -19,7 +19,7 @@ virtualenv env_cloud
 
 Activate environment
 ```
-virtualenv env_cloud/bin/activate
+source env_cloud/bin/activate
 ```
 
 Install lib
