@@ -61,11 +61,11 @@ def manage(request):
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
 	req = Requirements.objects.get(vm_name=current_vm.name)
-	if req.app_type == 1:
+	if int(req.app_type) == 1:
 		web = 1
 		db = 0
 		bj = 0
-	elif req.app_type == 2:
+	elif int(req.app_type) == 2:
 		web = 0
 		db = 1
 		bj = 0
@@ -82,7 +82,7 @@ def manage(request):
 		'web': web,
 		'db': db,
 		'bj': bj,
-		'current_name': current_vm.name,
+		'current_name': current_vm.name_display,
 		'apply': 0 })
    	return HttpResponse(template.render(context))
 
@@ -146,11 +146,11 @@ def change_requirements(request):
 			appropiate_latency = state.latency_ssd
 			appropiate_iops = state.iops_ssd
 			cost = float(current_vm.size) * 0.090
-		if req.app_type == 1:
+		if int(req.app_type) == 1:
 			web = 1
 			db = 0
 			bj = 0
-		elif req.app_type == 2:
+		elif int(req.app_type) == 2:
 			web = 0
 			db = 1
 			bj = 0
@@ -185,10 +185,10 @@ def register(request):
     return render(request,'register.html')
 
 def registersuccess(request):
-    usr = request.POST['username']
-    passwd = request.POST['password']
-    user = User.objects.create_user(usr, '', passwd)
-    user.save()
+	usr = request.POST['username']
+	passwd = request.POST['password']
+	user = User.objects.create_user(usr, '', passwd)
+	user.save()
 	return HttpResponseRedirect('/tiramisu/login/')
 
 def showdetails(request):
