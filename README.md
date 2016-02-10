@@ -24,7 +24,7 @@ source env_cloud/bin/activate
 
 Install lib
 ```
-pip install -r requiements/requirements.txt
+pip install -r requirements/requirements.txt
 ```
 
 Deactivate environment
