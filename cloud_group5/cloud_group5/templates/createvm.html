@@ -22,11 +22,11 @@
 		<div class="box box-solid box-default">
 			<div class="box-header"><h4>VM name</h4></div>
 			<div class="box-body">
-				<div class="col-md-8">
+				<div class="col-md-8" id="text_input_name">
 					<input type="text" name="name" id="vm_name" class="form-control" placeholder="VM name">
 				</div>
 				<div class="col-md-4">
-					<button type="button" class="btn btn-default" id="btn_check">check</button>
+					<button type="button" class="btn btn-default" id="btn_check"><i class="fa fa-check"></i>check</button>
 				</div>
 			</div>
 		</div>
@@ -110,11 +110,14 @@
 		if (vm_name.length != 0){
 			$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
     			$("#btn_check").removeClass("btn-default btn-danger btn-success");
+    			$("#text_input_name").removeClass("has-error has-success");
     			if (data.result == "pos"){ 
     				$("#btn_check").addClass("btn-success");
+    				$("#text_input_name").addClass("has-success");
     			}
     			else { 
 					$("#btn_check").addClass("btn-danger");
+					$("#text_input_name").addClass("has-error");
     			}
   			});
 		}

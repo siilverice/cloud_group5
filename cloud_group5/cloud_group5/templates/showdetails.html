@@ -22,9 +22,9 @@
 	      		Now, your VM appropiate with another storage.<br>
 	      		We recommend you to move your VM for better performance or cost cheaper.
 	    	</h5>
-	    	<div class="col-md-10"></div>
-			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Move</button></a>
-			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-denger">Turn off notice</button></a>
+	    	<div class="col-md-9"></div>
+			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary"><i class="fa fa-clone"></i>Move</button></a>
+			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-warning"><i class="fa fa-bell-slash"></i>Turn off notice</button></a>
 	  	</div>
 	{% endif %}
 	<p>VM name: {{storage.vm_name}}</p>
@@ -51,11 +51,11 @@
 	<div class="row">
 		<div class="col-md-10">
 		{% if turnoff %}
-			<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning">Turn on notification</button></a>
+			<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning"><i class="fa fa-bell"></i>Turn on notification</button></a>
 		{% endif %}
 		</div>
 		<div class="col-md-2">
-   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i>Manage</button></a>
    		</div>
    	</div>
 	
