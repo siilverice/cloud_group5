@@ -86,12 +86,6 @@ def manage(request):
 		'apply': 0 })
    	return HttpResponse(template.render(context))
 
-def test(request):
-	id_vm = request.GET['id']
-	test = request.GET['sure']
-	print(id_vm)
-	print(sure)
-
 def cal_percent(pc, data):
 	return (data * pc) / 100.00
 

@@ -25,5 +25,4 @@ urlpatterns = [
     url(r'^start/$', views.start, name='start'),
     url(r'^delete/$', views.delete, name='delete'),
     url(r'^rusure/$', views.rusure, name='rusure'),
-    url(r'^test/$', views.test, name='test'),
 ]
