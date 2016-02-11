@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from tiramisu.models import Requirements, VM, Cube, Storage, State
-import os
+import os, subprocess
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
@@ -93,6 +93,11 @@ def cal_percent(pc, data):
 	return (data * pc) / 100.00
 
 def change_requirements(request):
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_model'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
 	if request.method == 'POST':
 		id_vm 	= request.POST['name']
 		name = VM.objects.get(pk=id_vm)
@@ -179,7 +184,9 @@ def change_requirements(request):
 			'appropiate_latency': appropiate_latency,
 			'cost': cost,
 			'change': change, })
-	   	return HttpResponse(template.render(context))
+		return HttpResponse(template.render(context))
+	else:
+		return HttpResponseRedirect("/tiramisu/index")
 
 def register(request):
     return render(request,'register.html')
@@ -226,6 +233,11 @@ def showdetails(request):
    	return HttpResponse(template.render(context))
 
 def move(request):
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_move'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
 	command = 'ssh -t tuck@161.246.70.75 ./call_move ' + current_vm.name
@@ -296,8 +308,6 @@ def vmname_availability(request):
 		user = User.objects.get(id=request.session['user_id'])	
 		if request.method == 'POST':
 			vm_name = str(user.id)+request.POST.get('vm_name')
-			#vmObject = VM.objects.get(name=vm_name)
-			#vmObject = get_object_or_404(VM, name=vm_name)
 			try:
 				vmObject = VM.objects.get(name=vm_name)
 			except VM.DoesNotExist:
@@ -309,6 +319,11 @@ def vmname_availability(request):
 			return JsonResponse(response_data)
 
 def createvm(request):
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_init'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
 	if not request.session.is_empty() or request.user.is_anonymous():
 		user = User.objects.get(id=request.session['user_id'])	
 		if request.method == 'GET':
@@ -356,6 +371,16 @@ def createvm(request):
 			cube.app_type 		= request.POST['type']
 			cube.save()
 
+			state = State()
+			state.vm_name		= vm_name
+			state.latency 		= 8
+			state.iops 			= 8
+			state.latency_hdd	= 8
+			state.iops_hdd		= 8
+			state.latency_ssd	= 8
+			state.iops_ssd		= 8
+			state.save()
+
 			command = 'ssh -t tuck@161.246.70.75 ./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
 			os.system(command)
 
@@ -377,5 +402,17 @@ def createvmsuccess(request):
 		'id': user.id,
 		'vm_list': vm,
 		'ip': your_vm.ip,
+	})
+   	return HttpResponse(template.render(context))
+
+def servererror(request):
+	template = loader.get_template('500page.html')
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	context = RequestContext(request, {
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
 	})
    	return HttpResponse(template.render(context))
