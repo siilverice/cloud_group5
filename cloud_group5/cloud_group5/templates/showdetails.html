@@ -27,37 +27,97 @@
 			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-denger">Turn off notice</button></a>
 	  	</div>
 	{% endif %}
-	<p>VM name: {{storage.vm_name}}</p>
-	<p>Current storage: {{storage.current_pool}}</p>
-	<p>Appropiate storage: {{storage.appropiate_pool}}</p>
-	<p>IP: {{current_vm.ip}}</p>
-	{% if current_vm.status %}
-		<p>Status: Up <i class="fa fa-circle text-success"></i></p>
-	{% else %}
-		<p>Status: Down <i class="fa fa-circle text-failure"></i></p>
-	{% endif %}
-	<p>Virtual disk's size: {{current_vm.size}}</p>
-	<p>Cost: {{current_vm.cost}} THB</p>
-	<p>Latency: {{state.latency}} ms</p>
-	<p>IOPS: {{state.iops}}</p>
-	<p>Performance of current storage:</p>
-	{% if hdd %}
-		<p>Latency: {{ state.latency_hdd }} ms</p>
-		<p>IOPS: {{ state.iops_hdd }}</p>
-	{% else %}
-		<p>Latency: {{ state.latency_ssd }} ms</p>
-		<p>IOPS: {{ state.iops_ssd }}</p>
-	{% endif %}
-	<div class="row">
-		<div class="col-md-10">
-		{% if turnoff %}
-			<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning">Turn on notification</button></a>
-		{% endif %}
+	<div class="box box-solid box-primary">
+		<div class="box-header">
+			<h1 class="box-title">
+				<span style="color:#ffffff;">VM name : </span>
+				<b style="color:#ffffff;"> {{storage.vm_name}}</b>
+			</h1>
 		</div>
-		<div class="col-md-2">
-   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
-   		</div>
-   	</div>
+		<div class="box-body">
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>IP</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{current_vm.ip}}</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Status</b></div>
+			</div>
+			<div class="col-md-6">
+			{% if current_vm.status %}
+				<div>Up <i class="fa fa-circle text-success"></i></div>
+			{% else %}
+				<div>Down <i class="fa fa-circle text-failure"></i></div>
+			{% endif %}
+			</div>
+			<!-- _________________________________________________________ -->
+			<br>
+			<br>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Current storage</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{storage.current_pool}}</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Appropiate storage</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{storage.appropiate_pool}}</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Virtual disk's size</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{current_vm.size}}</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Cost</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{current_vm.cost}} THB</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-12">
+				<div class="text-center">
+					<h4><b>Performance of current storage</b></h4>
+				</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>Latency</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{state.latency}} ms</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-md-6">
+				<div class="pull-right"><b>IOPS</b></div>
+			</div>
+			<div class="col-md-6">
+				<div>{{state.iops}}</div>
+			</div>
+			<!-- _________________________________________________________ -->
+
+			<div class="row">
+				<div class="col-md-10">
+				{% if turnoff %}
+					<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning">Turn on notification</button></a>
+				{% endif %}
+				</div>
+				<div class="col-md-2">
+		   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
+		   		</div>
+		   	</div>
+		</div>
+	</div>
 	
 </section>
 
