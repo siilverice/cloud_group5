@@ -87,7 +87,10 @@ def manage(request):
    	return HttpResponse(template.render(context))
 
 def test(request):
-	return HttpResponseRedirect("/tiramisu/index")
+	id_vm = request.GET['id']
+	test = request.GET['sure']
+	print(id_vm)
+	print(sure)
 
 def cal_percent(pc, data):
 	return (data * pc) / 100.00
@@ -229,7 +232,8 @@ def showdetails(request):
 		'state': state,
 		'notice': notice,
 		'turnoff': turnoff,
-		'hdd': hdd, })
+		'hdd': hdd,
+		'rusure': 0 })
    	return HttpResponse(template.render(context))
 
 def move(request):
@@ -242,7 +246,7 @@ def move(request):
 	current_vm = VM.objects.get(id=id_vm)
 	command = 'ssh -t tuck@161.246.70.75 ./call_move ' + current_vm.name
 	os.system(command)
-	link = "../details?id=" + id_vm
+	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
 
 def turnoff(request):
@@ -251,7 +255,7 @@ def turnoff(request):
 	storage = Storage.objects.get(vm_name=current_vm.name)
 	storage.notice = 0
 	storage.save()
-	link = "../details?id=" + id_vm
+	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
 
 def turnon(request):
@@ -260,7 +264,7 @@ def turnon(request):
 	storage = Storage.objects.get(vm_name=current_vm.name)
 	storage.notice = 1
 	storage.save()
-	link = "../details?id=" + id_vm
+	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
 
 def cancel(request):
@@ -415,4 +419,108 @@ def servererror(request):
 		'id': user.id,
 		'vm_list': vm,
 	})
+	return HttpResponse(template.render(context))
+
+def shutdown(request):
+	id_vm = request.GET['id']
+	your_vm = VM.objects.get(id=id_vm)
+
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
+	command = 'ssh -t tuck@161.246.70.75 ./call_onoff shutdown ' + your_vm.name
+	os.system(command)
+
+	your_vm.status = 0
+	your_vm.save()
+	
+	link = "/tiramisu/details/?id=" + id_vm
+	return HttpResponseRedirect(link)
+
+def start(request):
+	id_vm = request.GET['id']
+	your_vm = VM.objects.get(id=id_vm)
+
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
+	command = 'ssh -t tuck@161.246.70.75 ./call_onoff start ' + your_vm.name
+	os.system(command)
+
+	your_vm.status = 1
+	your_vm.save()
+	
+	link = "/tiramisu/details/?id=" + id_vm
+	return HttpResponseRedirect(link)
+
+def delete(request):
+	id_vm = request.GET['id']
+	your_vm = VM.objects.get(id=id_vm)
+
+	try:
+		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_delete'])
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
+	command = 'ssh -t tuck@161.246.70.75 ./call_delete ' + your_vm.name
+	os.system(command)
+
+	state = State.objects.get(vm_name=your_vm.name)
+	state.delete()
+	cube = Cube.objects.get(vm_name=your_vm.name)
+	cube.delete()
+	req = Requirements.objects.get(vm_name=your_vm.name)
+	req.delete()
+	storage = Storage.objects.get(vm_name=your_vm.name)
+	storage.delete()
+	your_vm.delete()
+
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	template = loader.get_template('index.html')
+	context = RequestContext(request, {
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+	})
+	return HttpResponse(template.render(context))
+
+def rusure(request):
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	template = loader.get_template('showdetails.html')
+	id_vm = request.GET['id']
+	current_vm = VM.objects.get(id=id_vm)
+	state = State.objects.get(vm_name=current_vm.name)
+	storage = Storage.objects.get(vm_name=current_vm.name)
+	if storage.current_pool == 'HDD':
+		hdd = 1
+	else:
+		hdd = 0
+	if storage.current_pool != storage.appropiate_pool and storage.notice:
+		notice = 1
+	else:
+		notice = 0
+	if not storage.notice:
+		turnoff = 1
+	else:
+		turnoff = 0
+	context = RequestContext(request, {
+		'id_vm': id_vm,
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+		'storage': storage,
+		'current_vm': current_vm,
+		'state': state,
+		'notice': notice,
+		'turnoff': turnoff,
+		'hdd': hdd,
+		'rusure': 1 })
    	return HttpResponse(template.render(context))
