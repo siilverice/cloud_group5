@@ -22,16 +22,17 @@
 	      		Now, your VM appropiate with another storage.<br>
 	      		We recommend you to move your VM for better performance or cost cheaper.
 	    	</h5>
-	    	<div class="col-md-10"></div>
-			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Move</button></a>
-			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-denger">Turn off notice</button></a>
+	    	<div class="col-md-9"></div>
+			<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary"><i class="fa fa-clone"></i>Move</button></a>
+			<a href="../turnoff/?id={{id_vm}}"><button type="button" class="btn btn-warning"><i class="fa fa-bell-slash"></i>Turn off notice</button></a>
 	  	</div>
 	{% endif %}
+
 	<div class="box box-solid box-primary">
 		<div class="box-header">
 			<h1 class="box-title">
 				<span style="color:#ffffff;">VM name : </span>
-				<b style="color:#ffffff;"> {{storage.vm_name}}</b>
+				<b style="color:#ffffff;"> {{current_vm.name_display}}</b>
 			</h1>
 		</div>
 		<div class="box-body">
@@ -106,18 +107,45 @@
 			</div>
 			<!-- _________________________________________________________ -->
 
-			<div class="row">
-				<div class="col-md-10">
-				{% if turnoff %}
-					<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning">Turn on notification</button></a>
-				{% endif %}
-				</div>
-				<div class="col-md-2">
-		   			<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary">Manage</button></a>
-		   		</div>
-		   	</div>
+			
 		</div>
 	</div>
+
+	{% if rusure %}
+		<div class="callout callout-danger lead">
+			<h3>ARE YOU SURE ?</h3>
+			<h4>
+				<div class="col-md-1"></div>
+				Are you sure you want to <b>permanently delete</b> this VM ?
+			</h4>
+			<div class="col-md-9"></div>
+			<a href="../delete/?id={{id_vm}}"><button type="button" class="btn btn-warning">Yes</button></a>
+			<a href="../details/?id={{id_vm}}"><button type="button" class="btn btn-primary">No</button></a>
+		</div>
+	{% else %}
+		<div class="row">
+			<div class="col-md-8">
+			{% if turnoff %}
+				<a href="../turnon/?id={{id_vm}}"><button type="button" class="btn btn-warning"><i class="fa fa-bell"></i>Turn on notification</button></a>
+			{% endif %}
+			</div>
+			{% if current_vm.status %}
+				<div class="col-md-1">
+		   			<a href="../shutdown/?id={{id_vm}}"><button type="button" class="btn"><i class="fa fa-power-off"></i>Shutdown</button></a>
+		   		</div>
+		   		<div class="col-md-1">
+	   				<a href="../manage/?id={{id_vm}}"><button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i>Manage</button></a>
+	   			</div>
+		   	{% else %}
+		   		<div class="col-md-1">
+		   			<a href="../start/?id={{id_vm}}"><button type="button" class="btn"><i class="fa fa-power-off"></i>Start</button></a>
+		   		</div>
+			{% endif %}
+	   		<div class="col-md-2">
+	   			<a href="../rusure/?id={{id_vm}}"><button type="button" class="btn btn-danger"><i class="fa fa-times"></i>Delete</button></a>
+	   		</div>
+	   	</div>
+	{% endif %}
 	
 </section>
 
