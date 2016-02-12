@@ -91,7 +91,7 @@ def cal_percent(pc, data):
 
 def change_requirements(request):
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_model'])
+		subprocess.check_call(['ls','../../Tiramisu/tiramisu_src/the_cube.py'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -129,7 +129,7 @@ def change_requirements(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
+		command = 'python ../../Tiramisu/tiramisu_src/the_cube.py ' + name.name
 		os.system(command)
 
 		user = User.objects.get(id=request.session['user_id'])
@@ -232,13 +232,13 @@ def showdetails(request):
 
 def move(request):
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_move'])
+		subprocess.check_call(['ls','../../Tiramisu/tiramisu_src/automated_move/move.py'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
-	command = 'ssh -t tuck@161.246.70.75 ./call_move ' + current_vm.name
+	command = 'python ../../Tiramisu/tiramisu_src/automated_move/move.py  ' + current_vm.name
 	os.system(command)
 	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
@@ -294,7 +294,7 @@ def cancel(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'ssh tuck@161.246.70.75 ./call_model ' + name.name
+		command = 'python ../../Tiramisu/tiramisu_src/the_cube.py ' + name.name
 		os.system(command)
 
 		link = "../manage?id=" + id_vm
@@ -318,7 +318,7 @@ def vmname_availability(request):
 
 def createvm(request):
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_init'])
+		subprocess.check_call(['ls','../../Tiramisu/tiramisu_src/init_vm/init_vm_for_user.py'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -379,7 +379,7 @@ def createvm(request):
 			state.iops_ssd		= 8
 			state.save()
 
-			command = 'ssh -t tuck@161.246.70.75 ./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
+			command = 'python ../../Tiramisu/tiramisu_src/init_vm/init_vm_for_user.py ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
 			os.system(command)
 
 			vm = VM.objects.get(name=vm_name)
@@ -420,11 +420,11 @@ def shutdown(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection'])
+		subprocess.check_call(['sudo','virsh','list'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'ssh -t tuck@161.246.70.75 ./call_onoff shutdown ' + your_vm.name
+	command = 'sudo virsh shutdown ' + your_vm.name
 	os.system(command)
 
 	your_vm.status = 0
@@ -438,11 +438,11 @@ def start(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection'])
+		subprocess.check_call(['sudo','virsh','list'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'ssh -t tuck@161.246.70.75 ./call_onoff start ' + your_vm.name
+	command = 'sudo virsh start ' + your_vm.name
 	os.system(command)
 
 	your_vm.status = 1
@@ -456,11 +456,11 @@ def delete(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['ssh','tuck@161.246.70.75','./check_connection_delete'])
+		subprocess.check_call(['ls','../../Tiramisu/tiramisu_src/delete_vm.py'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'ssh -t tuck@161.246.70.75 ./call_delete ' + your_vm.name
+	command = 'python ../../Tiramisu/tiramisu_src/delete_vm.py ' + your_vm.name
 	os.system(command)
 
 	state = State.objects.get(vm_name=your_vm.name)
