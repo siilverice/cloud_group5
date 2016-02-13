@@ -37,17 +37,17 @@
 		</div>
 		<div class="box-body">
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>IP</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{current_vm.ip}}</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Status</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 			{% if current_vm.status %}
 				<div>Up <i class="fa fa-circle text-success"></i></div>
 			{% else %}
@@ -58,51 +58,51 @@
 			<br>
 			<br>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Current storage</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{storage.current_pool}}</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Appropiate storage</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{storage.appropiate_pool}}</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Virtual disk's size</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{current_vm.size}} MB</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Cost</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{current_vm.cost}} THB</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-12">
+			<div class="col-xs-12">
 				<div class="text-center">
 					<h4><b>Performance of current storage</b></h4>
 				</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>Latency</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{state.latency}} ms</div>
 			</div>
 			<!-- _________________________________________________________ -->
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div class="pull-right"><b>IOPS</b></div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-xs-6">
 				<div>{{state.iops}}</div>
 			</div>
 			<!-- _________________________________________________________ -->
