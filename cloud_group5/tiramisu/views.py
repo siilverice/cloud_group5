@@ -129,7 +129,7 @@ def change_requirements(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'python ../../Tiramisu/tiramisu_src/the_cube.py ' + name.name
+		command = 'cd ../../Tiramisu/tiramisu_src &&  python the_cube.py ' + name.name
 		os.system(command)
 
 		user = User.objects.get(id=request.session['user_id'])
@@ -238,7 +238,7 @@ def move(request):
 
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
-	command = 'python ../../Tiramisu/tiramisu_src/automated_move/move.py  ' + current_vm.name
+	command = 'cd ../../Tiramisu/tiramisu_src/automated_move && python move.py  ' + current_vm.name
 	os.system(command)
 	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
@@ -294,7 +294,7 @@ def cancel(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'python ../../Tiramisu/tiramisu_src/the_cube.py ' + name.name
+		command = 'cd ../../Tiramisu/tiramisu_src && python the_cube.py ' + name.name
 		os.system(command)
 
 		link = "../manage?id=" + id_vm
@@ -379,7 +379,7 @@ def createvm(request):
 			state.iops_ssd		= 8
 			state.save()
 
-			command = 'python ../../Tiramisu/tiramisu_src/init_vm/init_vm_for_user.py ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
+			command = 'cd ../../Tiramisu/tiramisu_src/init_vm && python init_vm_for_user.py ' + vm_name + " " + request.POST['name'] + " " + str(user.id)
 			os.system(command)
 
 			vm = VM.objects.get(name=vm_name)
@@ -460,7 +460,7 @@ def delete(request):
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'python ../../Tiramisu/tiramisu_src/delete_vm.py ' + your_vm.name
+	command = 'cd ../../Tiramisu/tiramisu_src && python delete_vm.py ' + your_vm.name
 	os.system(command)
 
 	state = State.objects.get(vm_name=your_vm.name)
