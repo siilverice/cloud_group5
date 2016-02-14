@@ -173,7 +173,7 @@ def change_requirements(request):
 			'web': web,
 			'db': db,
 			'bj': bj,
-			'current_name': current_vm.name,
+			'current_name': current_vm.name_display,
 			'apply': 1,
 			'req_old': req_old,
 			'appropiate_pool': storage.appropiate_pool,
