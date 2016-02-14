@@ -176,6 +176,7 @@ def change_requirements(request):
 			'current_name': current_vm.name,
 			'apply': 1,
 			'req_old': req_old,
+			'cube_old': cube_old,
 			'appropiate_pool': storage.appropiate_pool,
 			'appropiate_iops': appropiate_iops,
 			'appropiate_latency': appropiate_latency,
@@ -266,31 +267,31 @@ def cancel(request):
 		id_vm 	= request.POST['name']
 		name = VM.objects.get(pk=id_vm)
 		req = Requirements.objects.get(pk=name.name)
-		req.latency 	= request.POST['latency']
-		req.latency_max = request.POST['latency_max']
-		req.percentl 	= request.POST['percentl']
-		req.iops_min 	= request.POST['iops_min']
-		req.iops 		= request.POST['iops']
-		req.percenti 	= request.POST['percenti']
-		req.cost 		= request.POST['cost']
-		req.cost_max 	= request.POST['cost_max']
-		req.percentc 	= request.POST['percentc']
+		req.latency 	= request.POST['latency_req']
+		req.latency_max = request.POST['latency_max_req']
+		req.percentl 	= request.POST['percentl_req']
+		req.iops_min 	= request.POST['iops_min_req']
+		req.iops 		= request.POST['iops_req']
+		req.percenti 	= request.POST['percenti_req']
+		req.cost 		= request.POST['cost_req']
+		req.cost_max 	= request.POST['cost_max_req']
+		req.percentc 	= request.POST['percentc_req']
 		req.app_type 	= request.POST['type']
 		req.save()
 
 		cube = Cube.objects.get(pk=name.name)
-		cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
-		cube.latency 		= request.POST['latency']
-		cube.latency_max 	= request.POST['latency_max']
-		cube.percentl 		= request.POST['percentl']
-		cube.iops_min 		= request.POST['iops_min']
-		cube.iops 			= request.POST['iops']
-		cube.iops_max 		= float(request.POST['iops']) + cal_percent(float(request.POST['percenti']), float(request.POST['iops']))
-		cube.percenti 		= request.POST['percenti']
-		cube.cost_min 		= float(request.POST['cost']) - cal_percent(float(request.POST['percentc']), float(request.POST['cost']))
-		cube.cost 			= request.POST['cost']
-		cube.cost_max 		= request.POST['cost_max']
-		cube.percentc 		= request.POST['percentc']
+		cube.latency_min	= request.POST['latency_min_cube'])
+		cube.latency 		= request.POST['latency_cube']
+		cube.latency_max 	= request.POST['latency_max_cube']
+		cube.percentl 		= request.POST['percentl_cube']
+		cube.iops_min 		= request.POST['iops_min_cube']
+		cube.iops 			= request.POST['iops_cube']
+		cube.iops_max 		= request.POST['iops_max_cube']
+		cube.percenti 		= request.POST['percenti_cube']
+		cube.cost_min 		= request.POST['cost_min_cube']
+		cube.cost 			= request.POST['cost_cube']
+		cube.cost_max 		= request.POST['cost_max_cube']
+		cube.percentc 		= request.POST['percentc_cube']
 		cube.app_type 		= request.POST['type']
 		cube.save()
 

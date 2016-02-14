@@ -129,16 +129,29 @@
 				<form action="/tiramisu/cancel/" method="POST">
 				{% csrf_token %}
 					<input type="hidden" name="name" value={{ id_vm }}>
-					<input type="hidden" name="latency" value={{ req_old.latency }}>
-					<input type="hidden" name="latency_max" value={{ req_old.latency_max }}>
-					<input type="hidden" name="percentl" value={{ req_old.percentl }}>
-					<input type="hidden" name="iops_min" value={{ req_old.iops_min }}>
-					<input type="hidden" name="iops" value={{ req_old.iops }}>
-					<input type="hidden" name="percenti" value={{ req_old.percenti }}>
-					<input type="hidden" name="cost" value={{ req_old.cost }}>
-					<input type="hidden" name="cost_max" value={{ req_old.cost_max }}>
-					<input type="hidden" name="percentc" value={{ req_old.percentc }}>
+					<input type="hidden" name="latency_req" value={{ req_old.latency }}>
+					<input type="hidden" name="latency_max_req" value={{ req_old.latency_max }}>
+					<input type="hidden" name="percentl_req" value={{ req_old.percentl }}>
+					<input type="hidden" name="iops_min_req" value={{ req_old.iops_min }}>
+					<input type="hidden" name="iops_req" value={{ req_old.iops }}>
+					<input type="hidden" name="percenti_req" value={{ req_old.percenti }}>
+					<input type="hidden" name="cost_req" value={{ req_old.cost }}>
+					<input type="hidden" name="cost_max_req" value={{ req_old.cost_max }}>
+					<input type="hidden" name="percentc_req" value={{ req_old.percentc }}>
 					<input type="hidden" name="type" value={{ req_old.app_type }}>
+					
+					<input type="hidden" name="latency_min_cube" value={{ cube_old.latency_min }}>
+					<input type="hidden" name="latency_cube" value={{ cube_old.latency }}>
+					<input type="hidden" name="latency_max" value={{ cube_old.latency_max }}>
+					<input type="hidden" name="percentl_cube" value={{ cube_old.percentl }}>
+					<input type="hidden" name="iops_min_cube" value={{ cube_old.iops_min }}>
+					<input type="hidden" name="iops_cube" value={{ cube_old.iops }}>
+					<input type="hidden" name="iops_max_cube" value={{ cube_old.iops_max }}>
+					<input type="hidden" name="percenti_cube" value={{ cube_old.percenti }}>
+					<input type="hidden" name="cost_min_cube" value={{ cube_old.cost_min }}>
+					<input type="hidden" name="cost_cube" value={{ cube_old.cost }}>
+					<input type="hidden" name="cost_max_cube" value={{ cube_old.cost_max }}>
+					<input type="hidden" name="percentc_cube" value={{ cube_old.percentc }}>
 					<div class="col-md-2">
 						<button type="submit" class="btn btn-danger">Cancel</button>
 					</div>
