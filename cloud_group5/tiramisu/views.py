@@ -280,7 +280,7 @@ def cancel(request):
 		req.save()
 
 		cube = Cube.objects.get(pk=name.name)
-		cube.latency_min	= request.POST['latency_min_cube'])
+		cube.latency_min	= request.POST['latency_min_cube']
 		cube.latency 		= request.POST['latency_cube']
 		cube.latency_max 	= request.POST['latency_max_cube']
 		cube.percentl 		= request.POST['percentl_cube']
