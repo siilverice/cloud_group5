@@ -113,7 +113,7 @@ def change_requirements(request):
 		req.save()
 
 		cube = Cube.objects.get(pk=name.name)
-		cube_old = cube
+		cube_old = Cube.objects.get(pk=name.name)
 		cube.latency_min	= float(request.POST['latency']) - cal_percent(float(request.POST['percentl']), float(request.POST['latency']))
 		cube.latency 		= request.POST['latency']
 		cube.latency_max 	= request.POST['latency_max']
@@ -128,6 +128,9 @@ def change_requirements(request):
 		cube.percentc 		= request.POST['percentc']
 		cube.app_type 		= request.POST['type']
 		cube.save()
+		
+		storage = Storage.objects.get(vm_name=name.name)
+		ans_old = storage.appropiate_pool
 
 		command = 'cd ../../Tiramisu/tiramisu_src &&  python the_cube.py ' + name.name
 		os.system(command)
@@ -181,7 +184,8 @@ def change_requirements(request):
 			'appropiate_iops': appropiate_iops,
 			'appropiate_latency': appropiate_latency,
 			'cost': cost,
-			'change': change, })
+			'change': change,
+			'ans_old': ans_old, })
 		return HttpResponse(template.render(context))
 	else:
 		return HttpResponseRedirect("/tiramisu/index")
@@ -278,7 +282,7 @@ def cancel(request):
 		req.percentc 	= request.POST['percentc_req']
 		req.app_type 	= request.POST['type']
 		req.save()
-
+		
 		cube = Cube.objects.get(pk=name.name)
 		cube.latency_min	= request.POST['latency_min_cube']
 		cube.latency 		= request.POST['latency_cube']
@@ -295,9 +299,10 @@ def cancel(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'cd ../../Tiramisu/tiramisu_src && python the_cube.py ' + name.name
-		os.system(command)
-
+		storage = Storage.objects.get(vm_name=name.name)
+		storage.appropiate_pool = request.POST['ans']
+		storage.save()	
+	
 		link = "../manage?id=" + id_vm
 		return HttpResponseRedirect(link)
 
